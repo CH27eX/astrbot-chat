@@ -57,7 +57,7 @@ AstrBot Chat 就是补上这三块：**一套按聊天软件做的界面**，直
 | Windows 10 / 11 x64 | `AstrBot-Chat_0.2.26_x64-setup.exe` |
 | Ubuntu 24.04+ / Debian 12+ (amd64) | `AstrBot-Chat_0.2.26_amd64.deb` |
 | Android | `AstrBot-Chat-0.2.26-universal.apk` |
-| iOS | `AstrBot-Chat-0.2.26-ios-xcode-kit.zip`（Xcode 工程，需在 macOS 上编译） |
+| iOS | 暂不提供预打包：用仓库里的 `ios/` 工程或 `.github/workflows/ios.yml` 在 macOS 上编译 |
 
 校验和见 [`docs/SHA256SUMS-0.2.26.txt`](docs/SHA256SUMS-0.2.26.txt)：
 
@@ -66,7 +66,6 @@ sha256sum -c SHA256SUMS.txt
 ```
 
 > GitHub 会把附件名里的空格规范成连字符，所以这里比安装包内文件名少一个空格（`AstrBot-Chat_...`）。
-> 交付包原始文件名的校验和记录保留在 [`docs/SHA256SUMS-0.2.26.txt`](docs/SHA256SUMS-0.2.26.txt)。
 
 ### Windows
 
@@ -94,8 +93,8 @@ adb install -r AstrBot-Chat-0.2.26-universal.apk
 
 ### iOS
 
-Windows 上无法直出 ipa（平台限制）。zip 里是可编译的 Xcode 工程：解压到 Mac 上
-`pnpm install && bash scripts/build-ios.sh`，或推送仓库跑 `.github/workflows/ios.yml`
+Windows 上无法直出 ipa（平台限制）。仓库里的 `ios/` 是可编译的 Xcode 工程：在 Mac 上
+`pnpm install && pnpm ios:sync && bash scripts/build-ios.sh`，或推送仓库跑 `.github/workflows/ios.yml`
 （macOS runner）从 Artifacts 取 ipa。详见 [`docs/TESTER-GUIDE-IOS.md`](docs/TESTER-GUIDE-IOS.md)。
 
 ## 三步开始
