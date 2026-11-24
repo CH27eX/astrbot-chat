@@ -1,0 +1,9 @@
+name: astrbot_plugin_webchat_admin
+desc: 给 WebChat 客户端补齐「读会话历史 / 改会话名 / 删会话」三个接口。AstrBot 自带的 HTTP API 对 API Key 一律 Permission denied（creator 是 api_key:<id>，永远不等于会话的 creator），这个插件用插件身份绕开该限制，只暴露给带 plugin scope 的调用方。
+help: 装上即用，不需要配置。WebChat 客户端会自动探测 /astrbot_plugin_webchat_admin/health；探测失败就退回原来的行为（本地备注、不能删）。
+version: 0.1.1
+author: astrbot-chat
+repo: https://github.com/astrbot-chat/astrbot_plugin_webchat_admin
+display_name: WebChat Admin
+short_desc: 补三个 WebChat 客户端需要的会话接口
+astrbot_version: ">=4.26.0"

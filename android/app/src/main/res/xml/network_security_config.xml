@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  只给 AstrBot Chat 自己用：信任打包进 App 的那张 AstrBot 自签 CA（res/raw/astrbot_ca.crt），
+  外加系统 CA。这样手机连 PC 的 https://<IP>:8789 时**不需要用户再装系统证书**。
+
+  不放开 cleartext：套壳版只走 https（http 源在 App 里会连不上，是有意的）。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="@raw/astrbot_ca" />
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

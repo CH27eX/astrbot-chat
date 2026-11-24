@@ -1,0 +1,28 @@
+# 依赖
+node_modules/
+
+# 构建产物（dist 由 vite 生成，打包时会重打）
+dist/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# 生成物：scripts/sync-sidecar.mjs 生成；打包用的 Node 运行时不入库（89 MB）
+src-tauri/resources/bff/
+src-tauri/resources/node/
+src-tauri/resources/web/
+
+# 本地配置 / 密钥 / 日志
+*.local
+.env.local
+*.key
+password.txt
+logs/
+*.log
+
+# Python 缓存（plugins/ 与 scripts/dev/ 下）
+__pycache__/
+*.pyc
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db

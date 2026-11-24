@@ -1,0 +1,81 @@
+# 最小可用的 CI：把本地那套「typecheck + 单测 + 11 项 UI 回归」搬进流水线。
+#
+# 为什么只有两个 job：
+#   * unit  —— 前端类型 + 旧资源清理单测 + 构建 + UI 回归（不需要 AstrBot）；
+#   * rust  —— 壳的单元测试（启动器候选 / 诊断包打码 / 时间格式化）。
+#
+# 需要真 AstrBot 的三项（served-page / mobile / https）在这里用 --skip 跳过：
+# 它们会去请求 AstrBot 的接口，runner 上没有 AstrBot，503 属于环境问题不是回归。
+# 这三项仍然在本地 `pnpm run ui:check` 里跑（见 docs/开发进度总结-2026-11-19.md §5）。
+name: ui-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ui-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 类型检查
+        run: pnpm run typecheck
+
+      - name: 单测（旧资源清理）
+        run: pnpm run test:unit
+
+      - name: 构建前端
+        run: pnpm exec vite build
+
+      - name: UI 回归（跳过需要真 AstrBot 的三项）
+        run: node scripts/ui-regression/check.mjs --skip=served-page,mobile,https
+
+  rust:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: 同步 sidecar（tauri.conf.json 的 resources 得先存在）
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run sidecar:sync
+
+      - name: 壳的单元测试
+        working-directory: src-tauri
+        run: cargo test --lib

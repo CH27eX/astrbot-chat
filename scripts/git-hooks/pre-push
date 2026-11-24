@@ -1,0 +1,36 @@
+#!/bin/sh
+# 提交前自检（本地版 CI）。
+#
+# 安装一次就够：
+#   git config core.hooksPath scripts/git-hooks
+# 临时跳过（急着手动推）：
+#   git push --no-verify
+#
+# 只跑「不需要 AstrBot」的部分：类型检查 + 单测 + 构建 + 8 项 UI 回归。
+# 需要真 AstrBot 的三项（served-page / mobile / https）还是手动 `pnpm run ui:check`。
+set -e
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[pre-push] 找不到 node，跳过自检（真要跑请把 Node 放进 PATH）" >&2
+  exit 0
+fi
+
+echo "[pre-push] 类型检查"
+node node_modules/typescript/bin/tsc --noEmit
+
+echo "[pre-push] 单测"
+node --test server/web-assets.test.mjs server/proxy-token.test.mjs
+
+echo "[pre-push] PowerShell 脚本编码（UTF-8 BOM，否则 5.1 读中文会崩）"
+node scripts/check-ps1-encoding.mjs
+
+echo "[pre-push] 构建前端"
+node node_modules/vite/bin/vite.js build
+
+echo "[pre-push] UI 回归（跳过需要真 AstrBot 的三项）"
+node scripts/ui-regression/check.mjs --skip=served-page,mobile,https
+
+echo "[pre-push] 全绿"

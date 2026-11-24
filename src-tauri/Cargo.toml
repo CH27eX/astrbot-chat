@@ -1,0 +1,42 @@
+[package]
+name = "app"
+version = "0.2.26"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2024"
+rust-version = "1.90"
+
+# 可执行文件名（0.2.14 起）：以前直接用包名 `app` → Windows 装出来是 `app.exe`，
+# Linux 装到 `/usr/bin/app`，测试者完全看不出这是 AstrBot Chat。
+# 这里显式声明，同时 `tauri.conf.json` 的 `mainBinaryName` 必须写成一样的值；
+# 两处不一致时，打包会按 `mainBinaryName` 找 exe，直接构建失败（比装完才发现好）。
+[[bin]]
+name = "astrbot-chat"
+path = "src/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }
+# build.rs 里用来看 tauri.conf.json 的版本号
+serde_json = "1.0"
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.12.5", features = ["tray-icon"] }
+tauri-plugin-log = "2"
+tauri-plugin-store = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-window-state = "2"
+tauri-plugin-notification = "2"
+# 自动更新（P4）：校验签名后调用 NSIS 安装包完成覆盖安装
+tauri-plugin-updater = "2"

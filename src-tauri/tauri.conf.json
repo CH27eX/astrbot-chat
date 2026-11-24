@@ -1,0 +1,70 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AstrBot Chat",
+  "mainBinaryName": "astrbot-chat",
+  "version": "0.2.26",
+  "identifier": "com.astrbot.chat",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "node node_modules/vite/bin/vite.js",
+    "beforeBuildCommand": "node node_modules/vite/bin/vite.js build && node scripts/sync-sidecar.mjs"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "AstrBot Chat",
+        "width": 1100,
+        "height": 820,
+        "minWidth": 760,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "decorations": false,
+        "transparent": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data: blob: http://127.0.0.1:8788; media-src 'self' blob: http://127.0.0.1:8788; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:8788; style-src 'self' 'unsafe-inline'; script-src 'self'",
+      "devCsp": null
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk0NjE0NjczRDQ2NDY5NDUKUldSRmFXVFVjMFpobE9TV0NTemMyVE5LTUVQNDYxZXNjQzVuREhwUTlCaVl5VlpLNmY2eUhYRFAK",
+      "endpoints": [],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "resources/node/*": "sidecar/",
+      "resources/bff/index.mjs": "sidecar/bff.mjs",
+      "resources/bff/web-assets.mjs": "sidecar/web-assets.mjs",
+      "../dist/**/*": "sidecar/web/"
+    },
+    "createUpdaterArtifacts": false,
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      },
+      "nsis": {
+        "languages": ["SimpChinese"],
+        "displayLanguageSelector": false,
+        "installerIcon": "icons/icon.ico",
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

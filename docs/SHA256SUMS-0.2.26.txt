@@ -1,0 +1,5 @@
+a5810022225bda22b75fea26a8fd53ca7021d40f0d0c9bcb85d39b6a650b5604  AstrBot Chat_0.2.26_amd64.deb
+f677c5072c53850b100a03b60caba7b2e5de03157d99ffa3269e2b6b026d3c6c  AstrBot Chat_0.2.26_x64-setup.exe
+230fcac2f7b39a101bdb47db68a7a95444a880b365d8afe5e4b7a33373aff025  AstrBot Chat_0.2.26_x64-setup.exe.sig
+7c9e345fe02d4af6484edb492acd26538b1c0526ac683400d952149445992206  AstrBot-Chat-0.2.26-ios-xcode-kit.zip
+7f5645b4d2a73845d5a72788522cb39e08c738a747a2e76c49e4ac4bbbddd8c6  AstrBot-Chat-0.2.26-universal.apk
